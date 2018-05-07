@@ -32,11 +32,18 @@ app.startQuestion = (closeConnectionCallback) => {
 }
 
 app.completeSentence = (continueCallback) => {
-  //YOUR WORK HERE
-
-  console.log('Please write code for this function');
-  //End of your work
-  continueCallback();
+  inquirer.prompt([{
+    type: 'input',
+    message: 'What is your name?',
+    name: 'name'
+  }, {
+    type: 'input',
+    message: 'What is your age?',
+    name: 'age'
+  }]).then((res) => {
+      console.log('Your name is: ' + res.name + '. Your age is: ' + res.age + '.');
+      continueCallback();
+    })
 }
 
 app.createNewUser = (continueCallback) => {
