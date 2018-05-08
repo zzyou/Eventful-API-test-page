@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const connection = require('./connection');
 
 const app = {};
 app.startQuestion = (closeConnectionCallback) => {
@@ -31,6 +32,9 @@ app.startQuestion = (closeConnectionCallback) => {
   })
 }
 
+let username;
+let useremail;
+
 app.completeSentence = (continueCallback) => {
   inquirer.prompt([{
     type: 'input',
@@ -38,21 +42,28 @@ app.completeSentence = (continueCallback) => {
     name: 'name'
   }, {
     type: 'input',
-    message: 'What is your age?',
-    name: 'age'
+    message: 'What is your email?',
+    name: 'email'
   }]).then((res) => {
-      console.log('Your name is: ' + res.name + '. Your age is: ' + res.age + '.');
+      username = res.name;
+      userage = res.age;
+      useremail = res.email;
+      console.log('Your name is: ' + username + '. Your email is: ' + useremail + '.');
       continueCallback();
+    }).catch((err) => {
+      console.log(err);
     })
 }
 
 app.createNewUser = (continueCallback) => {
-  //YOUR WORK HERE
+  // app.completeSentence(continueCallback);
+  const newuser = {name: username, email: useremail};
 
-  console.log('Please write code for this function');
-  //End of your work
+  connection.query('INSERT INTO users SET ?', newuser, function (err, result, field) {
+    if (err) throw err;
+    console.log("1 user " + username + " inserted into mySQL database.");
+  });
   continueCallback();
-
 }
 
 app.searchEventful = (continueCallback) => {
