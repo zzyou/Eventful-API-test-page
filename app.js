@@ -46,7 +46,6 @@ app.completeSentence = (continueCallback) => {
     name: 'email'
   }]).then((res) => {
       username = res.name;
-      userage = res.age;
       useremail = res.email;
       console.log('Your name is: ' + username + '. Your email is: ' + useremail + '.');
       continueCallback();
