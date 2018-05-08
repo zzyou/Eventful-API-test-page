@@ -55,14 +55,30 @@ app.completeSentence = (continueCallback) => {
 }
 
 app.createNewUser = (continueCallback) => {
-  // app.completeSentence(continueCallback);
-  const newuser = {name: username, email: useremail};
+  inquirer.prompt([{
+    type: 'input',
+    message: 'What is your name?',
+    name: 'name'
+  }, {
+    type: 'input',
+    message: 'What is your email?',
+    name: 'email'
+  }]).then((res) => {
+      username = res.name;
+      useremail = res.email;
 
-  connection.query('INSERT INTO users SET ?', newuser, function (err, result, field) {
-    if (err) throw err;
-    console.log("1 user " + username + " inserted into mySQL database.");
-  });
-  continueCallback();
+      console.log('Your name is: ' + username + '. Your email is: ' + useremail + '.');
+
+      const newuser = {name: username, email: useremail};
+      
+      connection.query('INSERT INTO users SET ?', newuser, function (err, result, field) {
+        if (err) throw err;
+        console.log("1 user " + username + " inserted into mySQL database.");
+      });
+      continueCallback();
+    }).catch((err) => {
+      console.log(err);
+    })
 }
 
 app.searchEventful = (continueCallback) => {
