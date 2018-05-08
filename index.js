@@ -1,16 +1,7 @@
 //require packages
-const mysql = require("mysql");
-const mySqlKey = require('./keys').mySql;
+const connection = require('./connection');
 const app = require('./app');
 
-//create MySQL connection
-const connection = mysql.createConnection({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: mySqlKey,
-  database: "eventFinder"
-});
 
 const mySqlConnect = () => {
   connection.connect((err) =>{
