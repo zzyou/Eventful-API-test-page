@@ -36,15 +36,15 @@ function eventSearch(keyword, callback) {
       return console.error(err);
     }
 
-    let resultEvents = data.search.events.event;
+    const resultEvents = data.search.events.event;
 
     console.log('Received ' + data.search.total_items + ' events');
     console.log('The first event: ');
 
-    let newTitle = resultEvents[0].title;
-    let newTime = resultEvents[0].start_time;
-    let newVenue = resultEvents[0].venue_name;
-    let newAddress = resultEvents[0].venue_address;
+    const newTitle = resultEvents[0].title;
+    const newTime = resultEvents[0].start_time;
+    const newVenue = resultEvents[0].venue_name;
+    const newAddress = resultEvents[0].venue_address;
 
     console.log("===========================================================")
     console.log('title: ', newTitle);
@@ -52,7 +52,7 @@ function eventSearch(keyword, callback) {
     console.log('venue: ', newVenue);
     console.log('address: ', newAddress);
 
-    let newEvent = {title: newTitle, time: newTime, venue: newVenue, address: newAddress, keyword: keyword};
+    const newEvent = {title: newTitle, time: newTime, venue: newVenue, address: newAddress, keyword: keyword};
 
     callback(newEvent);
   });
