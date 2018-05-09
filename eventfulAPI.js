@@ -24,39 +24,38 @@ const client = new eventful.Client(eventfulKey);
 // });
 
 //export a custom function that searches via Eventful API, displays the results AND stores some of the data into MySQL
-module.exports = function (keyword) {
+function eventSearch(keyword, callback) {
   const optionObj = {
     keywords: keyword,
     location: "San Francisco",
     date: "Next Week"
   };
 
-  let newEvent = [];
-
   client.searchEvents(optionObj, (err, data) => {
     if (err) {
       return console.error(err);
     }
+
     let resultEvents = data.search.events.event;
 
     console.log('Received ' + data.search.total_items + ' events');
-    console.log('Event listings: ');
+    console.log('The first event: ');
 
-    for ( let i = 0 ; i < resultEvents.length; i++){
-      let newTitle = resultEvents[i].title;
-      let newTime = resultEvents[i].start_time;
-      let newVenue = resultEvents[i].venue_name;
-      let newAddress = resultEvents[i].venue_address;
+    let newTitle = resultEvents[0].title;
+    let newTime = resultEvents[0].start_time;
+    let newVenue = resultEvents[0].venue_name;
+    let newAddress = resultEvents[0].venue_address;
 
-      console.log("===========================================================")
-      console.log('title: ', newTitle);
-      console.log('time: ', newTime);
-      console.log('venue: ', newVenue);
-      console.log('address: ', newAddress);
+    console.log("===========================================================")
+    console.log('title: ', newTitle);
+    console.log('time: ', newTime);
+    console.log('venue: ', newVenue);
+    console.log('address: ', newAddress);
 
-      newEvent.push({title: newTitle, time: newTime, venue: newVenue, address: newAddress});
-    }  
+    let newEvent = {title: newTitle, time: newTime, venue: newVenue, address: newAddress, keyword: keyword};
+
+    callback(newEvent);
   });
-
-  return newEvent;
 }
+
+module.exports = eventSearch;
