@@ -1,5 +1,6 @@
 const eventfulKey = require("./keys.js").eventful;
 const eventful = require('eventful-node');
+
 const client = new eventful.Client(eventfulKey);
 
 // //sample search, try running it to see it in action
@@ -45,6 +46,7 @@ function eventSearch(keyword, callback) {
     const newTime = resultEvents[0].start_time;
     const newVenue = resultEvents[0].venue_name;
     const newAddress = resultEvents[0].venue_address;
+    const newId = resultEvents[0].$.id;
 
     console.log("===========================================================")
     console.log('title: ', newTitle);
@@ -52,7 +54,14 @@ function eventSearch(keyword, callback) {
     console.log('venue: ', newVenue);
     console.log('address: ', newAddress);
 
-    const newEvent = {title: newTitle, time: newTime, venue: newVenue, address: newAddress, keyword: keyword};
+    const newEvent = {
+      title: newTitle, 
+      time: newTime, 
+      venue: newVenue, 
+      address: newAddress, 
+      keyword: keyword, 
+      eventid: newId
+    };
 
     callback(newEvent);
   });
