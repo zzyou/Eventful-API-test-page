@@ -130,11 +130,56 @@ app.searchEventful = (continueCallback) => {
 }
 
 app.matchUserWithEvent = (continueCallback) => {
-  //YOUR WORK HERE
+  connection.query('SELECT * FROM users', function (err, result, field) {
+    if (err) throw err;
 
-  console.log('Please write code for this function');
-  //End of your work
-  continueCallback();
+    let userInfo = [];
+    for (let obj of result) {
+      userInfo.push(`${obj.id} || ${obj.name} || ${obj.email}`);
+    }
+
+    inquirer.prompt({
+      type: 'list',
+      message: 'Which one is your name and email?',
+      choices: userInfo,
+      name: 'selectUser'
+    }).then(userRes => {
+      console.log('Your name and email: ' + userRes.selectUser);
+      const userId = userRes.selectUser.split(' || ')[0];
+
+      connection.query('SELECT * FROM events', function (err, result, field) {
+        if (err) throw err;
+
+        let eventInfo = [];
+        for (let obj of result) {
+          eventInfo.push(`${obj.id} || ${obj.title} || ${obj.time} || ${obj.venue}`);
+        }
+
+        inquirer.prompt({
+          type: 'list',
+          message: 'Which event do you want to attend?',
+          choices: eventInfo,
+          name: 'selectEvent'
+        }).then(eventRes => {
+          console.log('Your event: ' + eventRes.selectEvent);
+          const eventId = eventRes.selectEvent.split(' || ')[0];
+
+          const userEvent = {userId: userId, eventId: eventId};
+
+          connection.query('INSERT INTO savedEvents SET ?', userEvent, function(err, result, field) {
+            if (err) throw err;
+            console.log('Your selection has been saved to the database.');
+
+            continueCallback();
+          })
+        }).catch(err => {
+          console.log(err);
+        }) 
+      })
+    }).catch(err => {
+      console.log(err);
+    })
+  })
 }
 
 app.seeEventsOfOneUser = (continueCallback) => {
