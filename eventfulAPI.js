@@ -39,29 +39,33 @@ function eventSearch(keyword, callback) {
 
     const resultEvents = data.search.events.event;
 
-    console.log('Received ' + data.search.total_items + ' events');
-    console.log('The first event: ');
+    let newEvent;
 
-    const newTitle = resultEvents[0].title;
-    const newTime = resultEvents[0].start_time;
-    const newVenue = resultEvents[0].venue_name;
-    const newAddress = resultEvents[0].venue_address;
-    const newId = resultEvents[0].$.id;
+    if (resultEvents) {
+      console.log('Received ' + data.search.total_items + ' events');
+      console.log('The first event: ');
 
-    console.log("===========================================================")
-    console.log('title: ', newTitle);
-    console.log('time: ', newTime);
-    console.log('venue: ', newVenue);
-    console.log('address: ', newAddress);
+      const newTitle = resultEvents[0].title;
+      const newTime = resultEvents[0].start_time;
+      const newVenue = resultEvents[0].venue_name;
+      const newAddress = resultEvents[0].venue_address;
+      const newId = resultEvents[0].$.id;
 
-    const newEvent = {
-      title: newTitle, 
-      time: newTime, 
-      venue: newVenue, 
-      address: newAddress, 
-      keyword: keyword, 
-      eventid: newId
-    };
+      console.log("===========================================================")
+      console.log('title: ', newTitle);
+      console.log('time: ', newTime);
+      console.log('venue: ', newVenue);
+      console.log('address: ', newAddress);
+
+      newEvent = {
+        title: newTitle, 
+        time: newTime, 
+        venue: newVenue, 
+        address: newAddress, 
+        keyword: keyword, 
+        eventid: newId
+      };
+    }
 
     callback(newEvent);
   });
