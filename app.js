@@ -101,27 +101,34 @@ app.searchEventful = (continueCallback) => {
     console.log('You are searching for ' + res.keyword + '.');
 
     eventSearch(res.keyword, (newEvent) => {
-      inquirer.prompt({
-        type: 'confirm',
-        message: 'Do you want to save this event? Y/N',
-        'default': false,
-        name: 'saveToDB'
-      })
-      .then((res) => {
-        if (res.saveToDB === true) {
-          connection.query('INSERT INTO events SET ?', newEvent, function (err, result, field) {
-            if (err) throw err;
-            console.log('Your event has been saved to the database.');
-            continueCallback();
-          })
-        } 
-        else {
-          app.searchEventful(continueCallback);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })     
+      if (!newEvent) {
+        console.log('No event about ' + res.keyword + ' has been found. Please use another keyword.');
+        app.searchEventful(continueCallback);
+      }
+
+      else {
+        inquirer.prompt({
+          type: 'confirm',
+          message: 'Do you want to save this event? Y/N',
+          'default': false,
+          name: 'saveToDB'
+        })
+        .then((res) => {
+          if (res.saveToDB) {
+            connection.query('INSERT INTO events SET ?', newEvent, function (err, result, field) {
+              if (err) throw err;
+              console.log('Your event has been saved to the database.');
+              continueCallback();
+            })
+          }
+          else {
+            app.searchEventful(continueCallback);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      }           
     });
   })
   .catch(err => {
