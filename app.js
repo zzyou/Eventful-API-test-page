@@ -112,7 +112,6 @@ app.searchEventful = (continueCallback) => {
           connection.query('INSERT INTO events SET ?', newEvent, function (err, result, field) {
             if (err) throw err;
             console.log('Your event has been saved to the database.');
-            // console.log(result.insertId);
             continueCallback();
           })
         } 
