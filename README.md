@@ -1,4 +1,4 @@
-# Eventful-API-test-page
+# Event Search Application for Terminal
 Node, Inquirer, MySQL, Eventful API, Eventful Node.
 
 - Created a terminal application with node, inquirer, MySQL, eventful API, Eventful Node.
