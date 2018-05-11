@@ -51,7 +51,7 @@ function eventSearch(keyword, callback) {
       const newAddress = resultEvents[0].venue_address;
       const newId = resultEvents[0].$.id;
 
-      console.log("===========================================================")
+      console.log("===========================================================");
       console.log('title: ', newTitle);
       console.log('time: ', newTime);
       console.log('venue: ', newVenue);

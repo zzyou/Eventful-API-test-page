@@ -93,7 +93,7 @@ app.createNewUser = () => {
 }
 
 app.searchEventful = (continueCallback) => {
-  return inquirer.prompt({
+  inquirer.prompt({
     type: 'input',
     message: 'What kind of event do you want to search?',
     name: 'keyword'
@@ -173,7 +173,7 @@ app.matchUserWithEvent = (continueCallback) => {
 
           const userEvent = {userId: userId, eventId: eventId};
 
-          connection.query('INSERT INTO savedEvents SET ?', userEvent, function(err, result, field) {
+          connection.query('INSERT INTO selectedevents SET ?', userEvent, function(err, result, field) {
             if (err) throw err;
             console.log('Your selection has been saved to the database.');
 
@@ -190,19 +190,75 @@ app.matchUserWithEvent = (continueCallback) => {
 }
 
 app.seeEventsOfOneUser = (continueCallback) => {
-  //YOUR WORK HERE
+  inquirer.prompt({
+    type: 'input',
+    message: 'For which user do you want to see all his or her events? Enter the user ID please.',
+    name: 'searchUserId'
+  }).then(res => {
+    const userId = res.searchUserId;
+    console.log('You are searching for event(s) that user ID ' + userId + ' is going to attend.');
 
-  console.log('Please write code for this function');
-  //End of your work
-  continueCallback();
+    const eventQuery = 'SELECT * FROM selectedevents AS s JOIN events AS e WHERE s.userid = ? AND s.eventid = e.id';
+
+    connection.query(eventQuery, userId, function(err, result, fields) {
+      if (err) throw err;
+
+      if (result.length === 0) {
+        console.log('No event found for user ID ' + userId + '. Please try another user ID.');
+        app.seeEventsOfOneUser(continueCallback);
+      }
+      else {
+        console.log('User ID ' + userId + ' is going to the following event(s):');
+
+        result.forEach(obj => {
+          console.log("===========================================================");
+          console.log('Name: ', obj.title);
+          console.log('Time: ', obj.time);
+          console.log('Venue: ', obj.venue);
+          console.log('Address: ', obj.address);
+        });
+        
+        continueCallback();
+      }      
+    });
+  }).catch(err => {
+    console.log(err);
+  })
 }
 
 app.seeUsersOfOneEvent = (continueCallback) => {
-  //YOUR WORK HERE
+  inquirer.prompt({
+    type: 'input',
+    message: 'For which event do you want to see its attendees? Enter the event ID please.',
+    name: 'searchEventId'
+  }).then(res => {
+    const eventId = res.searchEventId;
+    console.log('You are searching for attendee(s) of event ID ' + eventId + '.');
 
-  console.log('Please write code for this function');
-  //End of your work
-  continueCallback();
+    const userQuery = 'SELECT * FROM selectedevents AS s JOIN users AS u WHERE s.eventid = ? AND s.userid = u.id';
+
+    connection.query(userQuery, eventId, function(err, result, fields) {
+      if (err) throw err;
+
+      if (result.length === 0) {
+        console.log('No user found for event ID ' + eventId + '. Please try another event ID.');
+        app.seeUsersOfOneEvent(continueCallback);
+      }
+      else {
+        console.log('Attendee(s) of Event ID ' + eventId + ': ');
+
+        result.forEach(obj => {
+          console.log("===========================================================");
+          console.log('Name: ', obj.name);
+          console.log('Email: ', obj.email);
+        });
+        
+        continueCallback();
+      }   
+    });
+  }).catch(err => {
+    console.log(err);
+  })
 }
 
 module.exports = app;
