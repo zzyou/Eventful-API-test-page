@@ -30,5 +30,5 @@ Before you start, please request an API key from eventful (http://api.eventful.c
         "eventful": 'Your-Eventful-API-Key-Goes-Here', 
         "mySql": ''
     };`
-- `npm install`, install all node modules.
+- `npm install`, install required node modules.
 - `node index.js`, have fun!
