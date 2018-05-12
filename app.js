@@ -67,6 +67,7 @@ app.startQuestion = (closeConnectionCallback) => {
   })
 }
 
+
 const getUserInfo = () => {
   return inquirer.prompt([{
     type: 'input',
@@ -78,6 +79,7 @@ const getUserInfo = () => {
     name: 'email'
   }]);
 };
+
 
 let userName;
 let userEmail;
@@ -93,6 +95,7 @@ app.completeSentence = (continueCallback) => {
   })
 }
 
+
 const promisedQuery = (query, arg) => {
   return new Promise((resolve, reject) => {
     connection.query(query, arg, function(err, result, field) {
@@ -103,6 +106,7 @@ const promisedQuery = (query, arg) => {
     });
   });
 };
+
 
 app.createNewUser = () => {
   let newUser = {};
@@ -120,6 +124,7 @@ app.createNewUser = () => {
     return promisedQuery('INSERT INTO users SET ?', newUser);
   })
 }
+
 
 app.searchEventful = (continueCallback) => {
   inquirer.prompt({
@@ -165,6 +170,7 @@ app.searchEventful = (continueCallback) => {
   })
 }
 
+
 const parseResults = (inputs, version) => {
   let items = JSON.parse(JSON.stringify(inputs));
 
@@ -181,6 +187,7 @@ const parseResults = (inputs, version) => {
 
   return results;
 }
+
 
 app.matchUserWithEvent = (continueCallback) => {
   connection.query('SELECT * FROM users', function (err, result, field) {
@@ -225,19 +232,15 @@ app.matchUserWithEvent = (continueCallback) => {
   })
 }
 
+
 app.seeEventsOfOneUser = (continueCallback) => {
   connection.query('SELECT * FROM users', function (err, result, field) {
     if (err) throw err;
 
-    let userInfo = [];
-    for (let obj of result) {
-      userInfo.push(`${obj.id} || ${obj.name} || ${obj.email}`);
-    }
-
     inquirer.prompt({
       type: 'list',
-      message: 'Select an user to see the user\'s event(s).',
-      choices: userInfo,
+      message: 'Select a user to see which event(s) the user is going to.',
+      choices: parseResults(result, 'users'),
       name: 'selectUser'
     }).then(userRes => {
       console.log('You are searching user: ' + userRes.selectUser);
@@ -274,19 +277,15 @@ app.seeEventsOfOneUser = (continueCallback) => {
   })
 }
 
+
 app.seeUsersOfOneEvent = (continueCallback) => {
   connection.query('SELECT * FROM events', function (err, result, field) {
     if (err) throw err;
 
-    let eventInfo = [];
-    for (let obj of result) {
-      eventInfo.push(`${obj.id} || ${obj.title} || ${obj.time} || ${obj.venue}`);
-    }
-
     inquirer.prompt({
       type: 'list',
       message: 'Select an event to see its attendee(s)',
-      choices: eventInfo,
+      choices: parseResults(result, 'events'),
       name: 'selectEvent'
     }).then(eventRes => {
       const eventArr = eventRes.selectEvent.split(' || ');
@@ -305,7 +304,7 @@ app.seeUsersOfOneEvent = (continueCallback) => {
           app.seeUsersOfOneEvent(continueCallback);
         }
         else {
-          console.log('Attendee(s) of Event ' + eventName + ': ');
+          console.log('Attendee(s) of Event: ' + eventName + ': ');
 
           result.forEach(obj => {
             console.log("===========================================================");
@@ -321,5 +320,6 @@ app.seeUsersOfOneEvent = (continueCallback) => {
     })
   })
 }
+
 
 module.exports = app;
