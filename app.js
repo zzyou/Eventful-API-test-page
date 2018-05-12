@@ -80,7 +80,6 @@ const getUserInfo = () => {
   }]);
 };
 
-
 let userName;
 let userEmail;
 
@@ -106,7 +105,6 @@ const promisedQuery = (query, arg) => {
     });
   });
 };
-
 
 app.createNewUser = () => {
   let newUser = {};
@@ -175,7 +173,7 @@ const parseResults = (inputs, version) => {
   let items = JSON.parse(JSON.stringify(inputs));
 
   let results = [];
-  for (let item of items) {
+  items.forEach((item) => {
     let row = `${item.id} || `;
     if (version === 'users') {
       row += `${item.name} || ${item.email}`;
@@ -183,7 +181,7 @@ const parseResults = (inputs, version) => {
       row += `${item.title} || ${item.time} || ${item.venue}`;
     }
     results.push(row);
-  }
+  });
 
   return results;
 }
@@ -320,6 +318,5 @@ app.seeUsersOfOneEvent = (continueCallback) => {
     })
   })
 }
-
 
 module.exports = app;
