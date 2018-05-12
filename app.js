@@ -165,23 +165,23 @@ app.searchEventful = (continueCallback) => {
   })
 }
 
-const parseResults = (inputs, version) => {
-  let items = JSON.parse(JSON.stringify(inputs));
-  console.log(items);
+// const parseResults = (inputs, version) => {
+//   let items = JSON.parse(JSON.stringify(inputs));
+//   console.log(items);
 
-  let results = [];
-  for (let item of items) {
-    let row = `${item.id} || `;
-    if (version === 'users') {
-      row += `${item.email}`;
-    } else {
-      row += `${item.title}`;
-    }
-    results.push(row);
-  }
+//   let results = [];
+//   for (let item of items) {
+//     let row = `${item.id} || `;
+//     if (version === 'users') {
+//       row += `${item.name} || ${item.email}`;
+//     } else {
+//       row += `${item.title} || ${obj.time} || ${obj.venue}`;
+//     }
+//     results.push(row);
+//   }
 
-  return results;
-}
+//   return results;
+// }
 
 app.matchUserWithEvent = (continueCallback) => {
   connection.query('SELECT * FROM users', function (err, result, field) {
