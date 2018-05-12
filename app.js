@@ -4,37 +4,66 @@ const eventSearch = require('./eventfulAPI');
 
 const app = {};
 app.startQuestion = (closeConnectionCallback) => {
+  const actions = [
+    'Complete a sentence',
+    'Create a new user',
+    'Find one event of a particular type in San Francisco next week',
+    'Mark an existing user to attend an event in database',
+    'See all events that a particular user is going to',
+    'See all the users that are going to a particular event',
+    'Exit'
+  ];
+
   inquirer.prompt({
     type: 'list',
     message: 'What action would you like to do?',
-    choices: [
-      'Complete a sentence',
-      'Create a new user',
-      'Find one event of a particular type in San Francisco next week',
-      'Mark an existing user to attend an event in database',
-      'See all events that a particular user is going to',
-      'See all the users that are going to a particular event',
-      'Exit'
-    ],
+    choices: actions,
     name:'action',
   }).then((res) => {
     const continueCallback = () => app.startQuestion(closeConnectionCallback);
 
-    if (res.action === 'Complete a sentence') app.completeSentence(continueCallback);
-    if (res.action === 'Create a new user') 
-      app.createNewUser().then((result) => {
+    switch (res.action) {
+      case actions[0]:
+        app.completeSentence(continueCallback);
+        break;
+      case actions[1]:
+        app.createNewUser().then((result) => {
           console.log('Your info has been saved to the database.');
         }).catch((err) => {
           console.log(err);
         }).then(() => continueCallback());
-    if (res.action === 'Find one event of a particular type in San Francisco next week') app.searchEventful(continueCallback);
-    if (res.action === 'Mark an existing user to attend an event in database') app.matchUserWithEvent(continueCallback);
-    if (res.action === 'See all events that a particular user is going to') app.seeEventsOfOneUser(continueCallback);
-    if (res.action === 'See all the users that are going to a particular event') app.seeUsersOfOneEvent(continueCallback);
-    if (res.action === 'Exit') {
-      closeConnectionCallback();
-      return;
+        break;
+      case actions[2]:
+        app.searchEventful(continueCallback);
+        break;
+      case actions[3]:
+        app.matchUserWithEvent(continueCallback);
+        break;
+      case actions[4]:
+        app.seeEventsOfOneUser(continueCallback);
+        break;
+      case actions[5]:
+        app.seeUsersOfOneEvent(continueCallback);
+        break;
+      default:
+        closeConnectionCallback();
     }
+
+    // if (res.action === actions[0]) app.completeSentence(continueCallback);
+    // if (res.action === actions[1]) 
+    //   app.createNewUser().then((result) => {
+    //       console.log('Your info has been saved to the database.');
+    //     }).catch((err) => {
+    //       console.log(err);
+    //     }).then(() => continueCallback());
+    // if (res.action === actions[2]) app.searchEventful(continueCallback);
+    // if (res.action === actions[3]) app.matchUserWithEvent(continueCallback);
+    // if (res.action === actions[4]) app.seeEventsOfOneUser(continueCallback);
+    // if (res.action === actions[5]) app.seeUsersOfOneEvent(continueCallback);
+    // if (res.action === actions[6]) {
+    //   closeConnectionCallback();
+    //   return;
+    // }
   })
 }
 
@@ -134,6 +163,24 @@ app.searchEventful = (continueCallback) => {
   .catch(err => {
     console.log(err);
   })
+}
+
+const parseResults = (inputs, version) => {
+  let items = JSON.parse(JSON.stringify(inputs));
+  console.log(items);
+
+  let results = [];
+  for (let item of items) {
+    let row = `${item.id} || `;
+    if (version === 'users') {
+      row += `${item.email}`;
+    } else {
+      row += `${item.title}`;
+    }
+    results.push(row);
+  }
+
+  return results;
 }
 
 app.matchUserWithEvent = (continueCallback) => {
