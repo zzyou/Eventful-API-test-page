@@ -23,8 +23,8 @@ Node, Inquirer, MySQL, Eventful API, Eventful Node.
 Before you start, please request an API key from eventful (http://api.eventful.com/).
 
 - `git clone https://github.com/zzyou/Eventful-API-test-page.git`, clone this repo to your computer.
-- `cd Eventful-API-test-page`, change directory to this repo in your computer.
-- `touch keys.js`, create a new file named keys.js.
+- `cd Eventful-API-test-page`, change directory to this folder in your computer.
+- `touch keys.js`, create a new file named keys.js in this folder.
 - Open keys.js in your text editor, and put the following code in the file:
     - `module.exports = {
         "eventful": 'Your-Eventful-API-Key-Goes-Here', 
