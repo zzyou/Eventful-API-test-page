@@ -239,7 +239,7 @@ app.seeEventsOfOneUser = (continueCallback) => {
 
     inquirer.prompt({
       type: 'list',
-      message: 'Select an user to see which event(s) the user is going to.',
+      message: 'Select a user to see which event(s) the user is going to.',
       choices: parseResults(result, 'users'),
       name: 'selectUser'
     }).then(userRes => {
