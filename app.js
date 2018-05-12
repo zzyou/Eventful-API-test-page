@@ -67,7 +67,7 @@ app.startQuestion = (closeConnectionCallback) => {
   })
 }
 
-const getUserName = () => {
+const getUserInfo = () => {
   return inquirer.prompt([{
     type: 'input',
     message: 'What is your name?',
@@ -78,6 +78,20 @@ const getUserName = () => {
     name: 'email'
   }]);
 };
+
+let userName;
+let userEmail;
+
+app.completeSentence = (continueCallback) => {
+  getUserInfo().then((res) => {
+    userName = res.name;
+    userEmail = res.email;
+    console.log('Your name is: ' + userName + '. Your email is: ' + userEmail + '.');
+    continueCallback();
+  }).catch((err) => {
+    console.log(err);
+  })
+}
 
 const promisedQuery = (query, arg) => {
   return new Promise((resolve, reject) => {
@@ -90,34 +104,20 @@ const promisedQuery = (query, arg) => {
   });
 };
 
-let username;
-let useremail;
-
-app.completeSentence = (continueCallback) => {
-  getUserName().then((res) => {
-    username = res.name;
-    useremail = res.email;
-    console.log('Your name is: ' + username + '. Your email is: ' + useremail + '.');
-    continueCallback();
-  }).catch((err) => {
-    console.log(err);
-  })
-}
-
 app.createNewUser = () => {
-  let newuser = {};
+  let newUser = {};
 
-  if (username && useremail) {
-    newuser.name = username;
-    newuser.email = useremail;  
-    return promisedQuery('INSERT INTO users SET ?', newuser);
+  if (userName && userEmail) {
+    newUser.name = userName;
+    newUser.email = userEmail;  
+    return promisedQuery('INSERT INTO users SET ?', newUser);
   }
 
-  return getUserName().then((res) => {
-    newuser.name = username = res.name;
-    newuser.email = useremail = res.email;      
-    console.log('Your name is: ' + username + '. Your email is: ' + useremail + '.');
-    return promisedQuery('INSERT INTO users SET ?', newuser);
+  return getUserInfo().then((res) => {
+    newUser.name = userName = res.name;
+    newUser.email = userEmail = res.email;      
+    console.log('Your name is: ' + userName + '. Your email is: ' + userEmail + '.');
+    return promisedQuery('INSERT INTO users SET ?', newUser);
   })
 }
 
@@ -165,37 +165,31 @@ app.searchEventful = (continueCallback) => {
   })
 }
 
-// const parseResults = (inputs, version) => {
-//   let items = JSON.parse(JSON.stringify(inputs));
-//   console.log(items);
+const parseResults = (inputs, version) => {
+  let items = JSON.parse(JSON.stringify(inputs));
 
-//   let results = [];
-//   for (let item of items) {
-//     let row = `${item.id} || `;
-//     if (version === 'users') {
-//       row += `${item.name} || ${item.email}`;
-//     } else {
-//       row += `${item.title} || ${obj.time} || ${obj.venue}`;
-//     }
-//     results.push(row);
-//   }
+  let results = [];
+  for (let item of items) {
+    let row = `${item.id} || `;
+    if (version === 'users') {
+      row += `${item.name} || ${item.email}`;
+    } else {
+      row += `${item.title} || ${item.time} || ${item.venue}`;
+    }
+    results.push(row);
+  }
 
-//   return results;
-// }
+  return results;
+}
 
 app.matchUserWithEvent = (continueCallback) => {
   connection.query('SELECT * FROM users', function (err, result, field) {
     if (err) throw err;
 
-    let userInfo = [];
-    for (let obj of result) {
-      userInfo.push(`${obj.id} || ${obj.name} || ${obj.email}`);
-    }
-
     inquirer.prompt({
       type: 'list',
       message: 'Which one is your name and email?',
-      choices: userInfo,
+      choices: parseResults(result, 'users'),
       name: 'selectUser'
     }).then(userRes => {
       console.log('Your name and email: ' + userRes.selectUser);
@@ -204,15 +198,10 @@ app.matchUserWithEvent = (continueCallback) => {
       connection.query('SELECT * FROM events', function (err, result, field) {
         if (err) throw err;
 
-        let eventInfo = [];
-        for (let obj of result) {
-          eventInfo.push(`${obj.id} || ${obj.title} || ${obj.time} || ${obj.venue}`);
-        }
-
         inquirer.prompt({
           type: 'list',
           message: 'Which event do you want to attend?',
-          choices: eventInfo,
+          choices: parseResults(result, 'events'),
           name: 'selectEvent'
         }).then(eventRes => {
           console.log('Your event: ' + eventRes.selectEvent);
@@ -258,7 +247,7 @@ app.seeEventsOfOneUser = (continueCallback) => {
 
       const eventQuery = 'SELECT * FROM selectedevents AS s JOIN events AS e WHERE s.userid = ? AND s.eventid = e.id';
 
-      connection.query(eventQuery, userId, function(err, result, fields) {
+      connection.query(eventQuery, userId, function(err, result, field) {
         if (err) throw err;
 
         if (result.length === 0) {
@@ -308,7 +297,7 @@ app.seeUsersOfOneEvent = (continueCallback) => {
 
       const userQuery = 'SELECT * FROM selectedevents AS s JOIN users AS u WHERE s.eventid = ? AND s.userid = u.id';
 
-      connection.query(userQuery, eventId, function(err, result, fields) {
+      connection.query(userQuery, eventId, function(err, result, field) {
         if (err) throw err;
 
         if (result.length === 0) {
