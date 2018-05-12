@@ -26,10 +26,9 @@ Before you start, please request an API key from eventful (http://api.eventful.c
 - `cd Eventful-API-test-page`, change directory to this repo in your computer.
 - `touch keys.js`, create a new file named keys.js.
 - Open keys.js in your text editor, and put the following code in the file:
-- 
-``module.exports = {
+- `module.exports = {
     "eventful": 'Your-API-Key-Goes-Here', 
     "mySql": ''
-};``
+};`
 - `npm install`, install all node modules.
 - `node index.js`, have fun!
