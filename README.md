@@ -11,7 +11,7 @@ Node, Inquirer, MySQL, Eventful API, Eventful Node.
 - `brew services start mysql`, start mysql.
 - Download and install Sequel Pro (http://www.sequelpro.com/).
 - Open Sequel Pro, and create a connection using `Host: 127.0.0.1` and `Username: root`.
-- After the connection, add a database named `eventonica`.
+- After connection, add a database named `eventonica`.
 - Inside `eventonica` database, create three tables named `Users`, `Events`, `SelectedEvents`.
 - For `Users` table, add two columns : `name`, `email`.
 - For `Events` table, add six columns : `title`, `time`, `venue`, `address`, `keyword`, `eventid`.
