@@ -4,6 +4,9 @@ Node, Inquirer, MySQL, Eventful API, Eventful Node.
 - Created a terminal application with node, inquirer, MySQL, eventful API, Eventful Node.
 - Features include creating new user, searching for events, searching for users.
 
+####
+<img src='terminalScreenshot.png' alt='terminal screenshot of this application' />
+
 ##
 
 ## How to Set Up MySQL Database:
