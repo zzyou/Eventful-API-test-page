@@ -12,7 +12,7 @@ Node, Inquirer, MySQL, Eventful API, Eventful Node.
 ## How to Set Up MySQL Database:
 - In terminal, type `brew install mysql`, install MySQL.
 - In terminal, type `brew services start mysql`, start MySQL.
-- Download and install `Sequel Pro` (http://www.sequelpro.com/).
+- Download and install [Sequel Pro](http://www.sequelpro.com/).
 - Open `Sequel Pro`, and create a connection using `Host: 127.0.0.1` and `Username: root`.
 - In the connection, add a database named `eventonica`.
 - Inside `eventonica` database, create three tables named `Users`, `Events`, `SelectedEvents`.
@@ -23,7 +23,7 @@ Node, Inquirer, MySQL, Eventful API, Eventful Node.
 ##
 
 ## How to Set Up This Application in Terminal:
-Before you start, please request an API key from `eventful` (http://api.eventful.com/).
+Before you start, please request an API key from [eventful](http://api.eventful.com/).
 
 - `git clone https://github.com/zzyou/Eventful-API-test-page.git`, clone this repo to your computer.
 - `cd Eventful-API-test-page`, change directory to this folder in your computer.
